@@ -2,7 +2,7 @@ import pyzed.sl as sl
 import sys
 import os
 import cv2
-import time
+#import time
 
 
 def main():
@@ -24,12 +24,12 @@ def main():
     # path_output = os.getcwd() + path_output
     # err = zed.enable_recording(path_output, sl.SVO_COMPRESSION_MODE.SVO_COMPRESSION_MODE_LOSSLESS)
 
-    # Capture 50 frames and stop
-    i = 0
+    
     image_left = sl.Mat()
     #####image_right = sl.Mat()
     runtime_parameters = sl.RuntimeParameters()
-    while i < 50:
+    # Capture 50 frames and stop
+    for i in range(50):
         # input()
         # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
@@ -49,9 +49,9 @@ def main():
 
             cv2.imshow("Image", image_ocv)
             cv2.imwrite('50images/{}.png'.format(i),image_ocv)
+            cv2.waitKey(2500)
             #cv2.imshow("Depth", depth_image_ocv)
-            time.sleep(2)
-            i = i + 1
+            #time.sleep(2)
 
     # Disable recording
     zed.disable_recording()
