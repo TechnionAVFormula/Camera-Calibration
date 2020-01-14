@@ -17,15 +17,15 @@ imgpoints = [] # 2d points in image plane.
 # Return a possibly-empty list of path names that match pathname(*.jpg)
 # Get the images from the folder
 images = glob.glob('50images\*.png')
-
+# For the 
 for fname in images:
     img = cv2.imread(fname)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
     # Find the chess board corners for each image. return the corners points in image
     # and retval will be true if the pattern is obtained
-    # need to specify the correct chessboard pattern size of inner corners?!? - here it is 8x5
-    # note The function requires white space (like a square-thick border, the wider the better) around
+    # Need to specify the correct chessboard pattern size of inner corners - here it is 8x5
+    # Note: The function requires white space (like a square-thick border, the wider the better) around
     # the board to make the detection more robust in various environments. 
     ret, corners = cv2.findChessboardCorners(gray, (8,5),None)
 
@@ -46,7 +46,8 @@ for fname in images:
 # Returns the camera matrix, distortion coefficients, rotation and translation vectors.
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 # Saving the paramaters
-np.savez('Camera_Param.npz', **{'CameraMtx': mtx, 'DistortionVec': dist, 'RotationVec': rvecs, 'TranslationVec': tvecs})
+np.savez('Calibration.npz', **{'CameraMtx': mtx, 'DistortionVec': dist})
+
 
 # img = cv2.imread('50images/27.png')
 # h,  w = img.shape[:2]
