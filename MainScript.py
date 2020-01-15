@@ -40,9 +40,9 @@ for fname in images:
         # Draw and display the corners
         img = cv2.drawChessboardCorners(img, (8,5), corners2,ret)
         cv2.imshow('img',img)
-        #cv2.waitKey(500)
+        cv2.waitKey(5)
 
-   
+cv2.destroyAllWindows()   
 # Returns the camera matrix, distortion coefficients, rotation and translation vectors.
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 # Saving the paramaters
@@ -65,5 +65,5 @@ np.savez('Calibration.npz', **{'CameraMtx': mtx, 'DistortionVec': dist})
 # cv2.imwrite('27_calibresult.png',dst)
 
 
-cv2.destroyAllWindows()
+
 

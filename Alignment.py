@@ -1,6 +1,7 @@
 import pyzed.sl as sl
 import cv2
 import numpy as np
+from ReadData import read_calibration
 
 # Create a Camera object
 zed = sl.Camera()
@@ -36,7 +37,6 @@ if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
     img = image_left.get_data()
 
     cv2.imshow("Image", img)
-    cv2.imwrite('Alignment_img.png')
     cv2.waitKey(2500)
 
     # Close the camera
@@ -79,11 +79,13 @@ if ret == True:
 
 # Returns the camera matrix, distortion coefficients, rotation and translation vectors.
 # rvec - Axis with angle magnitude (radians) [x, y, z]
-ret, mtx, dist, rvec, tvec = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
+R, d = read_calibration()
+
+retval, rvec, tvec = cv2.solvePnP(objectPoints=objpoints[0], imagePoints=imgpoints[0], cameraMatrix=R, distCoeffs=d)
+# ret, mtx, dist, rvec, tvec = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 # Transform the rotation vector to Rmat - Rotation Matrix (radians)
-Rmat = cv.Rodrigues2(rvec)
-Rmat = R[0] # There is extra data  which we don't need
+Rmat,_ = cv2.Rodrigues(rvec)
 
 # Saving the paramaters
 np.savez('Alignment.npz', **{'RotationMtx': Rmat, 'TranslationVec': tvec})

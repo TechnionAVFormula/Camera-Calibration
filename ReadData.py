@@ -10,7 +10,7 @@ def read_calibration():
 
 
  #Get the Rotaion Matrix and Translation vector
-def read_alignmnet():
+def read_alignment():
     Align_data = load('Alignment.npz') 
     #Align_data.files >>> ['RotationVec', 'TranslationVec']
     R = Align_data['RotationMtx']
