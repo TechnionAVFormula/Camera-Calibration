@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 from numpy.linalg import inv
 
-# Some how get R,t,K
 
 def World_XY_from_uv_and_Z(imgpoints, K, R, t, Z):
     imgpoints_h = cv2.convertPointsToHomogeneous(imgpoints) # Turns the 2d cordinate (u,v) to a 3d (u,v,1)

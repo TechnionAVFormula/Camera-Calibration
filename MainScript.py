@@ -5,10 +5,10 @@ import glob
 # termination criteria - of the form: (type, max_iter, epsilon)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
-# prepare object points, like (0,0,0), (30,0,0), (60,0,0) ....,(210,120,0) - cordinate of the chessboard
+# prepare object points, like (0,0,0), (3,0,0), (6,0,0) ....,(21,0,12) - cordinate of the chessboard
 #need to specify the correct chessboard grid size - here it is 8x5 and square size is 30mm.
 objp = np.zeros((5*8,3), np.float32)
-objp[:,:2] = (np.mgrid[0:8,0:5].T.reshape(-1,2))*30
+objp[:,0:3:2] = (np.mgrid[0:8,0:5].T.reshape(-1,2))*3
 
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
