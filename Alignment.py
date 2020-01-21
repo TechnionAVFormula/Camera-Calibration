@@ -45,10 +45,11 @@ if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
 # termination criteria - of the form: (type, max_iter, epsilon)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
-# prepare object points, like (0,0,0), (3,0,0), (6,0,0) ....,(21,12,0) - cordinate of the chessboard
-#need to specify the correct chessboard grid size - here it is 8x5 and square size is 3cm.
+# prepare object points, like (0,0,0), (3,0,0), (6,0,0) ....,(21,0,12) - cordinate of the chessboard
+#need to specify the correct chessboard grid size - here the inner cotners size sre 8x5 and square size is 3cm.
 objp = np.zeros((5*8,3), np.float32)
-objp[:,:2] = (np.mgrid[0:8,0:5].T.reshape(-1,2))*3
+objp[:,0:3:2] = (np.mgrid[0:8,0:5].T.reshape(-1,2))*3
+#objp += (0,200,0)
 
 # Arrays to store object points and image points from the image.
 objpoints = [] # 3d point in real world space
@@ -80,12 +81,13 @@ if ret == True:
 # Returns the camera matrix, distortion coefficients, rotation and translation vectors.
 # rvec - Axis with angle magnitude (radians) [x, y, z]
 
-R, d = read_calibration()
+K, d = read_calibration()
 
-retval, rvec, tvec = cv2.solvePnP(objectPoints=objpoints[0], imagePoints=imgpoints[0], cameraMatrix=R, distCoeffs=d)
-# ret, mtx, dist, rvec, tvec = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+retval, rvec, tvec = cv2.solvePnP(objectPoints=objpoints[0], imagePoints=imgpoints[0], cameraMatrix=K, distCoeffs=d)
+
+#tvec.resize(3,1)
 # Transform the rotation vector to Rmat - Rotation Matrix (radians)
-Rmat,_ = cv2.Rodrigues(rvec)
+Rmat, _ = cv2.Rodrigues(rvec)
 
 # Saving the paramaters
 np.savez('Alignment.npz', **{'RotationMtx': Rmat, 'TranslationVec': tvec})

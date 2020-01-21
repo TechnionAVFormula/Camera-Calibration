@@ -62,6 +62,7 @@ while True:
     imgpoints = [u, v]
     imgpixels = np.array(imgpoints, dtype=np.int)
     imgpoints = np.array(imgpoints, dtype=np.float64)
+
     # Load the camera parameters: 
     # K - Camera matrix, d - Distortion coefficients vector,
     # R - Rotation matrix, t - Translation vector.
@@ -70,10 +71,9 @@ while True:
     R, t = read_alignment()
 
     N = imgpoints.shape[1]
-    ### Undistort use (1,N,2) shape so maybe need to reshape the vector: 
+    # Undistort use (1,N,2) shape so need to reshape the vector: 
     imgpoints1 = imgpoints.reshape(1,N,2)
-    ### To get back the normal form do: points_undist[0] or points_undist.reshape(N,2)
-    points_undist = cv2.undistortPoints(imgpoints1, cameraMatrix=K, distCoeffs=d, R=None, P=np.eye(3))
+    points_undist = cv2.undistortPoints(imgpoints1, cameraMatrix=K, distCoeffs=d, dst=None, R=None, P=np.eye(3))
     points_undist = points_undist.reshape(N,2)  # there is an extra level of array which we no longer need
 
     # Note that we passed in an identity matrix as the new camera matrix ("P"). We can pass
