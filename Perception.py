@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import pyzed.sl as sl
 from ReadData import read_alignment, read_calibration
-from Distance import  World_XY_from_uv_and_Z
+from Geometry import  World_XY_from_uv_and_Z, inverse_perspective
 from utils import getBoxes
 
 def Init():
@@ -68,10 +68,14 @@ while True:
     # R - Rotation matrix, t - Translation vector.
 
     K, d = read_calibration()
-    R, t = read_alignment()
+    Rinv, tinv = read_alignment()
+
+    # We invert it to obtain the transformation from camera frame to world, which
+    # is what OpenCV gives us by default.
+    R, t = inverse_perspective(Rinv, tinv)
 
     N = imgpoints.shape[1]
-    # Undistort use (1,N,2) shape so need to reshape the vector: 
+    # Undistort use (1,N,2) shape so need to reshape the vector.
     imgpoints1 = imgpoints.reshape(1,N,2)
     points_undist = cv2.undistortPoints(imgpoints1, cameraMatrix=K, distCoeffs=d, dst=None, R=None, P=np.eye(3))
     points_undist = points_undist.reshape(N,2)  # there is an extra level of array which we no longer need
